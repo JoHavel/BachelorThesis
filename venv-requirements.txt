@@ -1,0 +1,7 @@
+tensorflow==1.5.0
+opencv-python==4.8.0.74
+muscima==0.10.0
+editdistance==0.6.2
+python-Levenshtein==0.21.1
+scikit-image==0.17.2
+matplotlib

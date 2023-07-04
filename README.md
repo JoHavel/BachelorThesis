@@ -1,66 +1,140 @@
-# Optical Music Recognition using Deep Neural Networks
+# Symbol synthesis evaluation
 
-## Abstract
-
-Optical music recognition is a challenging field similar in many ways to optical text recognition. It brings, however, many challenges that traditional pipeline-based recognition systems struggle with. The end-to-end approach has proven to be superior in the domain of handwritten text recognition. We tried to apply this approach to the field of OMR. Specifically, we focused on handwritten music recognition. To resolve the lack of training data, we developed an engraving system for handwritten music called Mashcima. This engraving system is successful at mimicking the style of the CVC-MUSCIMA dataset. We evaluated our model on a portion of the CVC-MUSCIMA dataset and the approach seems to be promising.
+> This repository is forked from [Jirka-Mayer/BachelorThesis](https://github.com/Jirka-Mayer/BachelorThesis) and it is modified to run the same experiments with synthetic symbol images. To view its README, visit the link.
 
 
-## Thesis text
+## Setting up on a fresh machine in a virtual environment
 
-You can read the entire thesis at [thesis.pdf](thesis.pdf)
+Create python virtual environment (even python 3.6 will do):
 
+    python3 -m venv .venv
 
-## Setting up on a fresh machine
+Activate the environment in your shell:
 
-Make sure you have all the required python packages installed:
+    source .venv/bin/activate
 
-    pip install numpy
-    pip install cv2
-    pip install tensorflow  # tensorflow version 1 is needed
-    pip install muscima
-    pip install editdistance
-    pip install python-Levenshtein
-    pip install matplotlib
+Upgrade pip in the venv:
 
-> Tensorflow has to be in version 1. Project has been tested with versions 1.12.0 and 1.5.0. In case there are some problems, check that the blank symbol of CTC loss is encoded as `num_classes - 1`, not `0`.
+    pip3 install --upgrade pip
+
+Install all the necessary modules in the proper versions:
+
+    pip3 install -r venv-requirements.txt
 
 Download PRIMUS dataset (as a `.tgz` file) from
-[https://grfia.dlsi.ua.es/primus/](https://grfia.dlsi.ua.es/primus/)
-It need not be extracted.
+[https://grfia.dlsi.ua.es/primus/](https://grfia.dlsi.ua.es/primus/) into the `datasets` folder. It need not be extracted.
 
-Download staff-removal set of CVC-MUSCIMA images from [http://www.cvc.uab.es/cvcmuscima/index_database.html](http://www.cvc.uab.es/cvcmuscima/index_database.html)
+    wget -O ./datasets/primusCalvoRizoAppliedSciences2018.tgz https://grfia.dlsi.ua.es/primus/packages/primusCalvoRizoAppliedSciences2018.tgz
 
-Download MUSCIMA++ from [https://ufal.mff.cuni.cz/muscima](https://ufal.mff.cuni.cz/muscima)
+Download staff-removal set of CVC-MUSCIMA images from [http://www.cvc.uab.es/cvcmuscima/index_database.html](http://www.cvc.uab.es/cvcmuscima/index_database.html). And extract it.
 
-Clone the repository.
+    wget -O ./datasets/CVCMUSCIMA_SR.zip https://github.com/apacha/OMR-Datasets/releases/download/datasets/CVCMUSCIMA_SR.zip
+    mkdir -p datasets
+    unzip datasets/CVCMUSCIMA_SR.zip -d datasets/cvc-muscima
+    mv datasets/CvcMuscima-Distortions datasets/cvc-muscima
 
-Copy `config_example.py` to `config.py` and modify accordingly.
+Download MUSCIMA++ from [https://ufal.mff.cuni.cz/muscima](https://ufal.mff.cuni.cz/muscima). And extract it.
 
+    wget -O ./datasets/MUSCIMA-pp_v1.0.zip https://github.com/apacha/OMR-Datasets/releases/download/datasets/MUSCIMA-pp_v1.0.zip
+    mkdir -p datasets/muscima-pp
+    unzip datasets/MUSCIMA-pp_v1.0.zip -d datasets/muscima-pp
 
-## Experiments
+Copy `config_example.py` to `config.py` and modify if needed (most likely not).
 
-The four experiments proposed in the thesis can be found in their respective files `experiment_01.py` up to `experiment_04.py`. To get info on the experiment usage run:
+    cp config_example.py config.py
 
-    python3 experiment_01.py --help
-
-Each experiment can be trained, its dataset can be inspected and can be evaluated. Experiments 3 and 4 can be also evaluated on printed PrIMuS incipits.
-
-
-## Other files
-
-`inspect_annotation_generator.py` when run produces 10 synthetic incipits, prints their Mashcima encoding to the terminal, and displays their engraved image.
-
-`inspect_mashcima_generator.py` contains many inspections that have to be uncommented inside the file. Each inspection allows us to debug one feature of the Mashcima engraving system.
-
-`inspect_mashcima_symbols.py` allows us to inspect symbols that were extracted from the MUSCIMA++ dataset. Inspection to be run has to be uncommented.
-
-`inspect_primus_adapter.py` loads the entire PrIMuS dataset, converts as many insipits to Mashcima encoding as possible, and then validates each incipit conversion by engraving it into an image.
-
-`thesis_images.py` contains code snippets used to generate images for the thesis text.
+Now you are ready to run the experiments and inspections.
 
 
-## Trained models
+## Adding custom symbols into the symbol repository
 
-Trained models are stored inside the folder `trained-models`. One model is contained in a single folder with the model's name (e.g. `experiment_04`). Trained models can be downloaded from a release tag in this Github repository: [https://github.com/Jirka-Mayer/BachelorThesis/releases](https://github.com/Jirka-Mayer/BachelorThesis/releases)
+In [`mashcima/__init__.py`](mashcima/__init__.py) inside the constructor of the `Mashcima` class there's a final section, when there is a set of `assert` statements
+that check that each symbol has at least one occurence. Before this block, you can insert your own code that modifies the symbol lists. Ideally by calling some helper functions defined in some other file.
 
-Logs from model training are stored in folder `tf-logs`.
+
+### What symbols to modify and how
+
+> The format is: symbol name - sprite name(s)
+
+Single-sprite symbols with the origin in the geometric center of the image:
+
+    WHOLE_NOTES - notehead
+    QUARTER_RESTS - rest
+    EIGHTH_RESTS - rest
+    SIXTEENTH_RESTS - rest
+
+Single-sprite accidentals with the origin in the center of the "eye" of the symbol:
+
+    FLATS - /
+    SHARPS - /
+    NATURALS - /
+    
+    -> just sprites, not sprite groups so they have no name,
+    but when added onto a Note, the sprite will be named "accidental"
+
+Single-sprite symbols with the origin in the middle-top or middle-bottom:
+
+    WHOLE_RESTS - rest
+    HALF_RESTS - rest
+
+Multi-sprite notehead-stem symbols with origin in the geometric center of the notehead:
+
+    HALF_NOTES - notehead, stem
+    QUARTER_NOTES - notehead, stem
+    EIGHTH_NOTES - notehead, stem, flag_8
+    SIXTEENTH_NOTES - notehead, stem, flag_16
+
+    -> the sprite groups also have one special point, named "stem_head",
+    which is just the x coordinate of the top-most pixel
+    
+All clefs have a single sprite with the origin in horizontal center and vertically aligned to the defining staffline. Getting the origin for G and F clefs is difficult so we will skip those, but we can get the origin for C clefs as it's the geometric center of the clef. So we will only synthesize C clefs, just like we do whole notes.
+
+    G_CLEFS - clef
+    F_CLEFS - clef
+    C_CLEFS - clef
+
+Symbols that need not be synthesized (too simple, too rare, no training data):
+
+    LONGA_RESTS
+    BREVE_RESTS
+    DOTS
+    LEDGER_LINES
+    BAR_LINES
+    TALL_BAR_LINES
+    TIME_MARKS
+
+The number of symbols for the default MUSCIMA++ extraction process is following:
+
+    WHOLE_NOTES: 1183
+    HALF_NOTES: 845
+    QUARTER_NOTES: 15424
+    EIGHTH_NOTES: 1697
+    SIXTEENTH_NOTES: 334
+    LONGA_RESTS: 8
+    BREVE_RESTS: 12
+    WHOLE_RESTS: 83
+    HALF_RESTS: 166
+    QUARTER_RESTS: 553
+    EIGHTH_RESTS: 1058
+    SIXTEENTH_RESTS: 426
+    FLATS: 1064
+    SHARPS: 1689
+    NATURALS: 1021
+    DOTS: 3181
+    LEDGER_LINES: 6049
+    BAR_LINES: 2226
+    TALL_BAR_LINES: 633
+    G_CLEFS: 341
+    F_CLEFS: 250
+    C_CLEFS: 155
+    TIME_MARKS[time_0]: 1
+    TIME_MARKS[time_1]: 1
+    TIME_MARKS[time_2]: 28
+    TIME_MARKS[time_3]: 64
+    TIME_MARKS[time_4]: 98
+    TIME_MARKS[time_5]: 6
+    TIME_MARKS[time_6]: 17
+    TIME_MARKS[time_7]: 6
+    TIME_MARKS[time_8]: 23
+    TIME_MARKS[time_9]: 1
+    TIME_MARKS[time_c]: 26

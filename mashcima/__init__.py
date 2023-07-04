@@ -51,9 +51,7 @@ class Mashcima:
             for i, doc in enumerate(documents):
                 print("Parsing document %d/%d ..." % (i + 1, len(documents)))
                 self.DOCUMENTS.append(
-                    parse_cropobject_list(
-                        os.path.join(config.MUSCIMA_PP_CROP_OBJECT_DIRECTORY, doc)
-                    )
+                    parse_cropobject_list(doc)
                 )
 
         # cache the loaded documents
