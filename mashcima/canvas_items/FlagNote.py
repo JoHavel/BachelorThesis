@@ -26,11 +26,12 @@ class FlagNote(StemNote):
         super().place_sprites()
 
         if self.flipped:
-            f = self.sprites.sprite("flag_8")
-            f.mask = np.flip(f.mask, axis=1)
-            f.x += f.width
+            if self.sprites.has_sprite("flag_8"):
+                f = self.sprites.sprite("flag_8")
+                f.mask = np.flip(f.mask, axis=1)
+                f.x += f.width
 
-            if self.kind == "s":
+            if self.kind == "s" and self.sprites.has_sprite("flag_16"):
                 f = self.sprites.sprite("flag_16")
                 f.mask = np.flip(f.mask, axis=1)
                 f.x += f.width

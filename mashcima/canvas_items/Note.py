@@ -124,13 +124,29 @@ class Note(SlurableItem):
             sprite = copy.deepcopy(random.choice(mc.NATURALS))
         assert sprite is not None
         self.sprites.add("accidental", sprite)
+    
+    def notehead_width(self) -> int:
+        """Used to spacing purposes"""
+        # this is what the traditional mashcima does
+        if self.sprites.has_sprite("notehead"):
+            return self.sprites.sprite("notehead").width
+        # this is for synthetic symbols where we dont know where the notehead is
+        return random.randint(10, 35)
+    
+    def notehead_height(self) -> int:
+        """Used to spacing purposes"""
+        # this is what the traditional mashcima does
+        if self.sprites.has_sprite("notehead"):
+            return self.sprites.sprite("notehead").height
+        # this is for synthetic symbols where we dont know where the notehead is
+        return random.randint(14, 32)
 
     def _place_accidental(self):
         if self.accidental is None:
             return
         # Before this call, accidental is centered on origin
         sprite = self.sprites.sprite("accidental")
-        sprite.x -= self.sprites.sprite("notehead").width // 2
+        sprite.x -= self.notehead_width() // 2
         sprite.x -= sprite.width // 2
         sprite.x -= random.randint(5, 25)
 
@@ -154,7 +170,7 @@ class Note(SlurableItem):
 
         # Before this call, dot is centered on origin
         sprite = self.sprites.sprite("staccato")
-        sprite.y += sign * self.sprites.sprite("notehead").height // 2
+        sprite.y += sign * self.notehead_height() // 2
         sprite.y += sign * sprite.height // 2
         sprite.y += sign * random.randint(5, 15)
 
@@ -176,13 +192,13 @@ class Note(SlurableItem):
 
     def _get_slur_after_note_attachment_point(self):
         return (
-            self.sprites.position_x + (self.sprites.sprite("notehead").width // 2 + 8),
+            self.sprites.position_x + (self.notehead_width() // 2 + 8),
             self.sprites.position_y
         )
 
     def _get_slur_before_note_attachment_point(self):
         return (
-            self.sprites.position_x - (self.sprites.sprite("notehead").width // 2 + 8),
+            self.sprites.position_x - (self.notehead_width() // 2 + 8),
             self.sprites.position_y
         )
 
@@ -191,5 +207,5 @@ class Note(SlurableItem):
         sign = (-1 if slur.flipped else 1)
         return (
             self.sprites.position_x,
-            self.sprites.position_y + sign * (self.sprites.sprite("notehead").height // 2 + 8)
+            self.sprites.position_y + sign * (self.notehead_height() // 2 + 8)
         )

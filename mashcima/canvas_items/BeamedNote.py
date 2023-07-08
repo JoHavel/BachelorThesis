@@ -45,6 +45,11 @@ class BeamedNote(QuarterNote):
         self.flipped = self.beam.flipped
 
     def update_sprites_for_stem_length(self, stem_length: int):
+        if not self.sprites.has_sprite("stem"):
+            # synthetic images have sprites combined
+            self.update_sprites_for_stem_length_combined_image(stem_length)
+            return
+        
         self.sprites = copy.deepcopy(self.sprites)
 
         sign = -1 if self.flipped else 1
@@ -68,6 +73,30 @@ class BeamedNote(QuarterNote):
         sh = self.sprites.point("stem_head")
         sh = (sh[0], sh[1] - sign * lengthen)
         self.sprites.add_point("stem_head", sh)
+
+        self.sprites.recalculate_bounding_box()
+    
+    def update_sprites_for_stem_length_combined_image(self, target_stem_length: int):
+        """
+            Performs sprite stretching for combined images (e.g. synthetic images)
+            target_stem_length = vertical (y) distance between the sprite group origin
+            and the beam line, over the sprite group origin (x)
+        """
+        self.sprites = copy.deepcopy(self.sprites)
+        img = self.sprites.sprite("combined_image")
+        
+        stem_head_x, stem_head_y = self.sprites.point("stem_head")
+        sign = -1 if self.flipped else 1
+
+        current_length = -stem_head_y * sign
+        grow_pixels = target_stem_length - current_length
+        scale_coef = (current_length + grow_pixels) / current_length
+
+        img.stretch_height(int(img.height * scale_coef))
+        img.y = int(img.y * scale_coef)
+        
+        new_stem_head = (stem_head_x, int(stem_head_y * scale_coef))
+        self.sprites.add_point("stem_head", new_stem_head)
 
         self.sprites.recalculate_bounding_box()
 

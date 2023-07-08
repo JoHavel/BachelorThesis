@@ -34,7 +34,8 @@ class StemNote(Note):
             self.sprites = self.sprites.create_flipped_copy(
                 [
                     "notehead", "stem", "stem_head",
-                    "flag_8", "flag_16", "flag_32"
+                    "flag_8", "flag_16", "flag_32",
+                    "combined_image" # synthetic images use this
                 ]
             )
         super().place_sprites()

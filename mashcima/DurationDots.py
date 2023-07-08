@@ -39,7 +39,7 @@ class DurationDots:
         first_dot = self.item.sprites.sprite("duration_dot")
 
         if isinstance(self.item, Note):
-            first_dot.x += self.item.sprites.sprite("notehead").width // 2
+            first_dot.x += self.item.notehead_width() // 2
         if isinstance(self.item, Rest):
             first_dot.x += self.item.sprites.sprite("rest").width // 2
 

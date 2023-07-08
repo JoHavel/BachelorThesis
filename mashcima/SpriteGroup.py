@@ -43,6 +43,9 @@ class SpriteGroup:
 
     def sprite(self, name: str):
         return self.sprites[name]
+    
+    def has_sprite(self, name: str) -> bool:
+        return name in self.sprites
 
     def point(self, name: str):
         return self.points[name]
