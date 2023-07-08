@@ -16,7 +16,7 @@ def _load_sprite(directory: str, index: int) -> Sprite:
     img_path = os.path.join(directory, f"im{index}.png")
     center_path = os.path.join(directory, f"im{index}.txt")
     if not os.path.isfile(img_path):
-        raise Exception(f"Out of images or bad image names (may be im0.png, im1.png, ...) in directory `{directory}` with index {index}.")
+        raise Exception(f"Out of images or bad image names (should be im0.png, im1.png, ...) in directory `{directory}` with index {index}.")
     img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE) / 255
     x = -img.shape[1] // 2
     y = -img.shape[0] // 2

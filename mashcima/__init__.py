@@ -151,8 +151,17 @@ class Mashcima:
         self.C_CLEFS: List[SpriteGroup] = get_c_clefs(self)
         self.TIME_MARKS: Dict[str, List[SpriteGroup]] = get_time_marks(self)
 
+        # load synthetic symbol images
+        print("Loading synthetic symbols", {
+            "muscima_fraction": muscima_fraction,
+            "generated_fraction": generated_fraction
+        })
         from mashcima.generated_images import apply_fraction
-        apply_fraction(self, muscima_fraction, generated_fraction)
+        apply_fraction(
+            self,
+            muscima_fraction=muscima_fraction,
+            generated_fraction=generated_fraction
+        )
 
         # load default symbols if needed
         if len(self.EIGHTH_NOTES) == 0:
