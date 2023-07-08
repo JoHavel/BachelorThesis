@@ -88,7 +88,7 @@ class Slur:
         except:
             print("Slur didn't render - singular matrix")
             return
-        f = lambda x: abc[0] * x**2 + abc[1] * x + abc[2]
+        f = lambda x: int(abc[0] * x**2 + abc[1] * x + abc[2])
 
         for x in range(start_attachment[0], end_attachment[0]):
             cv2.line(
