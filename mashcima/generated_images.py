@@ -4,8 +4,7 @@ from typing import List
 
 from mashcima import Mashcima
 from mashcima.Sprite import Sprite
-
-_PATH = os.path.join(os.path.dirname(__file__), "generated_symbols")
+import config
 
 
 def _load_sprite(directory: str, index: int) -> Sprite:
@@ -32,12 +31,13 @@ def _load_sprites(dir_name: str, n: int) -> List[Sprite]:
     """
         Loads `n` sprites from directory `dir_name`
     """
-    directory = os.path.join(_PATH, dir_name)
+    directory = os.path.join(config.SYNTHETIC_SYMBOLS_PATH, dir_name)
     if not os.path.isdir(directory):
         raise Exception("Cannot load sprite directory: " + dir_name)
     sprites: List[Sprite] = []
     for i in range(n):
         sprites.append(_load_sprite(directory, i))
+    print(f"Loaded {len(sprites)} synthetic images: {dir_name}")
     return sprites
 
 
@@ -48,7 +48,8 @@ def apply_fraction(
 ):
     """
         Leaves `muscima_fraction` of original symbols in Mashcima
-        and ads `generated_fraction` * len(original symbols) of new symbols from `_PATH`
+        and ads `generated_fraction` * len(original symbols) of new symbols
+        from `config.SYNTHETIC_SYMBOLS_PATH`
     """
     sharps_len = len(self.SHARPS)
     self.SHARPS = self.SHARPS[:int(sharps_len * muscima_fraction)] + _load_sprites("sharp", int(sharps_len * generated_fraction))

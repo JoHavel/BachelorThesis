@@ -17,3 +17,6 @@ CVC_MUSCIMA_PATH = 'datasets/cvc-muscima/ideal'
 # where should muscima++ crop objects be loaded from
 # https://ufal.mff.cuni.cz/muscima
 MUSCIMA_PP_CROP_OBJECT_DIRECTORY = 'datasets/muscima-pp/v1.0/data/cropobjects_withstaff'
+
+# where the synthetic symbols are located?
+SYNTHETIC_SYMBOLS_PATH = 'datasets/synthetic-symbols'

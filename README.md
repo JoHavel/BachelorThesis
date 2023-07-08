@@ -39,6 +39,26 @@ Download MUSCIMA++ from [https://ufal.mff.cuni.cz/muscima](https://ufal.mff.cuni
     mkdir -p datasets/muscima-pp
     unzip datasets/MUSCIMA-pp_v1.0.zip -d datasets/muscima-pp
 
+Add synthesized symbol images into the `datasets/synthetic-symbols/` folder like so:
+
+    datasets/
+        synthetic-symbols/
+            flat/
+                im0.png
+                im0.txt
+                im1.png
+                im1.txt
+                ...
+            natural/
+                ...
+            sharp/
+                ...
+        
+        # the other datasets folders and files
+        cvc-muscima/...
+        muscima-pp/...
+        primusCalvoRizoAppliedSciences2018.tgz
+
 Copy `config_example.py` to `config.py` and modify if needed (most likely not).
 
     cp config_example.py config.py
