@@ -19,8 +19,11 @@ class Mashcima:
             documents: List[str] = None,
             take_writers: Optional[List[int]] = None,
             skip_writers: Optional[List[int]] = None,
-            use_cache: bool = False
+            use_cache: bool = False,
+            muscima_fraction: float = 1.0,
+            generated_fraction: float = 0.0,
     ):
+        assert muscima_fraction <= 1
         print("Loading mashcima...")
 
         # default documents to load
@@ -147,6 +150,9 @@ class Mashcima:
         self.F_CLEFS: List[SpriteGroup] = get_f_clefs(self)
         self.C_CLEFS: List[SpriteGroup] = get_c_clefs(self)
         self.TIME_MARKS: Dict[str, List[SpriteGroup]] = get_time_marks(self)
+
+        from mashcima.generated_images import apply_fraction
+        apply_fraction(self, muscima_fraction, generated_fraction)
 
         # load default symbols if needed
         if len(self.EIGHTH_NOTES) == 0:
