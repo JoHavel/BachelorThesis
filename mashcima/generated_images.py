@@ -98,6 +98,26 @@ def _load_sprite_groups(dir_name: str, n: int, point_name: str) -> List[SpriteGr
     return sprite_groups
 
 
+def _load_flag_notes(dir_name1: str, dir_name2: str, n: int):
+    """
+        Loads `n` pairs of sprite groups containing a note with
+        a stem from directory `dir_name1` and note with a stem
+        from directory `dir_name2`.
+        See `canvas_items.FlagNote.select_sprites`
+    """
+    directory1 = os.path.join(config.SYNTHETIC_SYMBOLS_PATH, dir_name1)
+    directory2 = os.path.join(config.SYNTHETIC_SYMBOLS_PATH, dir_name2)
+    if not os.path.isdir(directory1):
+        raise Exception("Cannot load sprite directory: " + dir_name1)
+    if not os.path.isdir(directory2):
+        raise Exception("Cannot load sprite directory: " + dir_name2)
+    sprite_groups = []
+    for i in range(n):
+        sprite_groups.append((_load_stemmed_note(directory1, i), _load_stemmed_note(directory2, i)))
+    print(f"Loaded {len(sprite_groups)} synthetic images: {dir_name1} and {dir_name2}")
+    return sprite_groups
+
+
 def apply_fraction(
         self: Mashcima,
         muscima_fraction: float,
@@ -157,3 +177,7 @@ def apply_fraction(
     self.QUARTER_RESTS = self.QUARTER_RESTS[:int(quarter_rest_len * muscima_fraction)] \
         + _load_sprite_groups("quarter-rest", int(quarter_rest_len * generated_fraction),
             "rest")
+
+    eighth_notes_len = len(self.EIGHTH_NOTES)
+    self.EIGHTH_NOTES = self.EIGHTH_NOTES[:int(eighth_notes_len * muscima_fraction)] \
+        + _load_flag_notes("eighth-note-down", "eighth-note-up", int(eighth_notes_len * generated_fraction))
