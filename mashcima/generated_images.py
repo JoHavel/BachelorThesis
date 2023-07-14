@@ -116,12 +116,12 @@ def apply_fraction(
     quarter_notes_len = len(self.QUARTER_NOTES)
     self.QUARTER_NOTES = self.QUARTER_NOTES[:int(quarter_notes_len * muscima_fraction)] \
         + _load_stemmed_notes("quarter-note", int(quarter_notes_len * generated_fraction))
-    eighth_notes_len = len(self.EIGHTH_NOTES)
-    self.EIGHTH_NOTES = self.EIGHTH_NOTES[:int(eighth_notes_len * muscima_fraction)] \
-        + _load_stemmed_notes("eighth-note", int(eighth_notes_len * generated_fraction))
-    sixteenth_notes_len = len(self.SIXTEENTH_NOTES)
-    self.SIXTEENTH_NOTES = self.SIXTEENTH_NOTES[:int(sixteenth_notes_len * muscima_fraction)] \
-        + _load_stemmed_notes("sixteenth-note", int(sixteenth_notes_len * generated_fraction))
+    # eighth_notes_len = len(self.EIGHTH_NOTES)
+    # self.EIGHTH_NOTES = self.EIGHTH_NOTES[:int(eighth_notes_len * muscima_fraction)] \
+    #     + _load_stemmed_notes("eighth-note", int(eighth_notes_len * generated_fraction))
+    # sixteenth_notes_len = len(self.SIXTEENTH_NOTES)
+    # self.SIXTEENTH_NOTES = self.SIXTEENTH_NOTES[:int(sixteenth_notes_len * muscima_fraction)] \
+    #     + _load_stemmed_notes("sixteenth-note", int(sixteenth_notes_len * generated_fraction))
 
     # sprite-only symbols
     sharps_len = len(self.SHARPS)
@@ -135,7 +135,25 @@ def apply_fraction(
         + _load_sprites("natural", int(naturals_len * generated_fraction))
 
     # TODO: sprite-group items with only one sprite
-    # whole_notes_len = len(self.WHOLE_NOTES)
-    # self.WHOLE_NOTES = self.WHOLE_NOTES[:int(whole_notes_len * muscima_fraction)] \
-    #     + _load_sprite_groups( "whole-note", int(whole_notes_len * generated_fraction),
-    #         "notehead")
+    whole_notes_len = len(self.WHOLE_NOTES)
+    self.WHOLE_NOTES = self.WHOLE_NOTES[:int(whole_notes_len * muscima_fraction)] \
+        + _load_sprite_groups("whole-note", int(whole_notes_len * generated_fraction),
+            "notehead")
+
+    c_clef_len = len(self.C_CLEFS)
+    self.C_CLEFS = self.C_CLEFS[:int(c_clef_len * muscima_fraction)] \
+        + _load_sprite_groups("c-clef", int(c_clef_len * generated_fraction),
+            "clef")
+    g_clef_len = len(self.G_CLEFS)
+    self.G_CLEFS = self.G_CLEFS[:int(g_clef_len * muscima_fraction)] \
+        + _load_sprite_groups("g-clef", int(g_clef_len * generated_fraction),
+            "clef")
+    f_clef_len = len(self.F_CLEFS)
+    self.F_CLEFS = self.F_CLEFS[:int(f_clef_len * muscima_fraction)] \
+        + _load_sprite_groups("f-clef", int(f_clef_len * generated_fraction),
+            "clef")
+
+    quarter_rest_len = len(self.QUARTER_RESTS)
+    self.QUARTER_RESTS = self.QUARTER_RESTS[:int(quarter_rest_len * muscima_fraction)] \
+        + _load_sprite_groups("quarter-rest", int(quarter_rest_len * generated_fraction),
+            "rest")
