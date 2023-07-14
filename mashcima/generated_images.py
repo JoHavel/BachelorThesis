@@ -50,7 +50,7 @@ def _load_stemmed_note(directory: str, index: int) -> SpriteGroup:
         Loads one 'stemmed note' SpriteGroup from one png and two txt files
     """
     img_path = os.path.join(directory, f"im{index}.png")
-    origin_path = os.path.join(directory, f"im{index}-origin.txt")
+    origin_path = os.path.join(directory, f"im{index}.txt")
     stem_head_path = os.path.join(directory, f"im{index}-stem_head.txt")
     if not os.path.isfile(img_path):
         raise Exception(
