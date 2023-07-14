@@ -54,7 +54,8 @@ class Sprite:
     def stretch_height(self, target_height: int):
         self.mask = cv2.resize(
             self.mask,
-            (self.width, target_height),
+            # FIXME I sometimes (1/63000) have problem with exception inv_scale_x > 0, so I added those max here
+            (max(self.width, 1), max(target_height, 1)),
             interpolation=cv2.INTER_NEAREST
         )
 
