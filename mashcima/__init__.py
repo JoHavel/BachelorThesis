@@ -152,16 +152,19 @@ class Mashcima:
         self.TIME_MARKS: Dict[str, List[SpriteGroup]] = get_time_marks(self)
 
         # load synthetic symbol images
-        print("Loading synthetic symbols", {
-            "muscima_fraction": muscima_fraction,
-            "generated_fraction": generated_fraction
-        })
-        from mashcima.generated_images import apply_fraction
-        apply_fraction(
-            self,
-            muscima_fraction=muscima_fraction,
-            generated_fraction=generated_fraction
-        )
+        if generated_fraction == 0.0 and muscima_fraction == 1.0:
+            print("Skipping loading synthetic symbols.")
+        else:
+            print("Loading synthetic symbols", {
+                "muscima_fraction": muscima_fraction,
+                "generated_fraction": generated_fraction
+            })
+            from mashcima.generated_images import apply_fraction
+            apply_fraction(
+                self,
+                muscima_fraction=muscima_fraction,
+                generated_fraction=generated_fraction
+            )
 
         # load default symbols if needed
         if len(self.EIGHTH_NOTES) == 0:
