@@ -129,6 +129,8 @@ def apply_fraction(
         from `config.SYNTHETIC_SYMBOLS_PATH`
     """
 
+    print("Loading synthetic symbols from:", config.SYNTHETIC_SYMBOLS_PATH)
+
     # stemmed notes
     half_notes_len = len(self.HALF_NOTES)
     self.HALF_NOTES = self.HALF_NOTES[:int(half_notes_len * muscima_fraction)] \

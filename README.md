@@ -30,7 +30,7 @@ Download staff-removal set of CVC-MUSCIMA images from [http://www.cvc.uab.es/cvc
 
     wget -O ./datasets/CVCMUSCIMA_SR.zip https://github.com/apacha/OMR-Datasets/releases/download/datasets/CVCMUSCIMA_SR.zip
     mkdir -p datasets
-    unzip datasets/CVCMUSCIMA_SR.zip -d datasets/cvc-muscima
+    unzip datasets/CVCMUSCIMA_SR.zip -d datasets
     mv datasets/CvcMuscima-Distortions datasets/cvc-muscima
 
 Download MUSCIMA++ from [https://ufal.mff.cuni.cz/muscima](https://ufal.mff.cuni.cz/muscima). And extract it.
@@ -64,6 +64,48 @@ Copy `config_example.py` to `config.py` and modify if needed (most likely not).
     cp config_example.py config.py
 
 Now you are ready to run the experiments and inspections.
+
+
+## Setting up on the cluster
+
+Set it up just like on any other machine, except that you should use the
+
+    venv-cluster-requirements.txt
+
+file as it contains GPU tensorflow and lacks matplotlib and so on.
+
+You can do the setup and pip installation from within the head machine, as it's just downloading and installing stuff anyways. No hard computation.
+
+You should create the venv using python from the opt directory (use the python 3.6 as it works with the old tensorflow):
+
+    /opt/python/3.6.3/bin/python3 -m venv .venv
+
+Then activate the environment and use just "python3":
+
+    source .venv/bin/activate
+
+Before you run anthing, make sure you have CUDA version specified:
+
+    export LD_LIBRARY_PATH=/opt/cuda/9.0/lib64:/opt/cuda/9.0/cudnn/7.0/lib64
+
+Also, execute the experiments on the **GeForce GTX 1080 Ti** cards. The new RTX are too fancy and it doesn't work on them (is very slow and crashes due to incompatible matrix shapes within the first batch). This is `dll-10gpu2` and `dll-10gpu3`only (see [cluster machines](https://wiki.ufal.ms.mff.cuni.cz/slurm)).
+
+You can start a process on a GPU node like this:
+
+    export LD_LIBRARY_PATH=/opt/cuda/9.0/lib64:/opt/cuda/9.0/cudnn/7.0/lib64
+    
+    srun -p gpu-ms --gpus=1 --pty bash
+    
+    srun -p gpu-ms --gpus=1 --mem=8gb --nodelist=dll-10gpu2 --pty .venv/bin/python3 experiment_01.py train
+
+    # Train topology experiment A_72
+    srun -p gpu-ms -n 1 --gpus=1 --mem=8gb --nodelist=dll-10gpu2 --pty .venv/bin/python3 experiment_topology.py train --model experiment_A_72 --symbols datasets/topology/out/for_mashcima/A_72 --seed_offset 0
+
+    # Run all the topology experiment
+    sbatch topology-train.sh
+
+    # Evaluate model experiment_01
+    srun -p gpu-ms -n 1 --gpus=1 --mem=8gb --nodelist=dll-10gpu2 --pty .venv/bin/python3 experiment_topology.py evaluate --model experiment_01
 
 
 ## Adding custom symbols into the symbol repository
