@@ -466,7 +466,7 @@ class Network:
 
             print("Epoch: %d/%s Batch: %d/%d Loss: %f ED: %f" % (
                 epoch, str(epochs), batch, batches, loss, greedy_edit_distance
-            ))
+            ), flush=True)
 
             batch += 1
 
@@ -527,7 +527,7 @@ class Network:
             self.current_edit_distance,
             self.current_loss
         ])
-        print("Edit distance: %f Word accuracy: %f%% Loss: %f" % (edit_distance, word_accuracy, loss))
+        print("Edit distance: %f Word accuracy: %f%% Loss: %f" % (edit_distance, word_accuracy, loss), flush=True)
 
         if word_accuracy >= 10: # do not show completely terrible results
             print("Some wrong examples:")
