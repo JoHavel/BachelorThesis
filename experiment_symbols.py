@@ -18,12 +18,12 @@ Experiment Topology:
     - Use symbols from all writers except for the evaluating ones
     - Minimal staff width of 1200px
 
-    USE ONLY SYNTHETIC SYMBOLS FROM GIVEN FOLDER
+    USE ONLY SYNTHETIC SYMBOLS FROM GIVEN FOLDER at "--symbols"
 
 '''
 
 
-class Experiment03(object):
+class ExperimentSymbols(object):
     def __init__(self):
         parser = argparse.ArgumentParser(usage=USAGE_TEXT)
         parser.add_argument('command', help='Command to run')
@@ -155,7 +155,64 @@ class Experiment03(object):
 
         from experiment_evaluation import evaluate_on_primus
         evaluate_on_primus(args.model)
+    
+    def aggregate_evaluation(self):
+        """Goes throught the finished evaluations and prints their aggregates"""
+        import os
+        import numpy as np
+
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--stdouts', default="tf-logs/foo")
+        args = parser.parse_args(sys.argv[2:])
+
+        directory = args.stdouts
+
+        def get_ser_avg_from_file(f):
+            in_averages = False
+            for line in f:
+                if line.startswith("=                Averages                ="):
+                    in_averages = True
+                if in_averages:
+                    if line.startswith("avg SER:"):
+                        return float(line.split(" ")[2])
+            return None
+        
+        for dataset in ["muscima", "primus", "cavatina"]:
+            print()
+            print("====================")
+            print("DATASET " + dataset)
+            print("====================")
+            print()
+
+            SERs = {
+                "A": [], "B": [], "C": [], "D": [],
+                "E": [], "F": [], "G": [], "H": [],
+                "L_2": [], "L_4": [], "L_10": [], "L_20": []
+            }
+            for filename in os.listdir(directory):
+                for experiment in SERs.keys():
+                    if filename.startswith(experiment) and filename.endswith(dataset + ".txt"):
+                        with open(os.path.join(directory, filename), "r") as f:
+                            s = get_ser_avg_from_file(f)
+                            if s is not None:
+                                SERs[experiment].append(s)
+            print(SERs)
+            print()
+
+            def fmt(key):
+                values = SERs[key]
+                if len(values) == 0:
+                    return key + ": ?              "
+                stddev = np.array(values).std()
+                avg = np.array(values).mean()
+                return key + f": {avg:.4f} +-{stddev:.4f}"
+
+            print(dataset + ":")
+            print(fmt("A"), fmt("B"), fmt("C"), fmt("D"), sep=" | ")
+            print(fmt("E"), fmt("F"), fmt("G"), fmt("H"), sep=" | ")
+            print()
+
 
 
 if __name__ == '__main__':
-    Experiment03()
+    ExperimentSymbols()

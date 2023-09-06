@@ -53,7 +53,7 @@ echo
 
 export LD_LIBRARY_PATH=/opt/cuda/9.0/lib64:/opt/cuda/9.0/cudnn/7.0/lib64
 
-.venv/bin/python3 experiment_topology.py train \
+.venv/bin/python3 experiment_symbols.py train \
     --model experiment_$NAME \
     --symbols datasets/topology/out/for_mashcima/$NAME \
     --seed_offset $ID

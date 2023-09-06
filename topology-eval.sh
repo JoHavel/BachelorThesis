@@ -53,15 +53,15 @@ echo
 
 export LD_LIBRARY_PATH=/opt/cuda/9.0/lib64:/opt/cuda/9.0/cudnn/7.0/lib64
 
-.venv/bin/python3 experiment_topology.py evaluate \
+.venv/bin/python3 experiment_symbols.py evaluate \
     --model experiment_$NAME \
     > tf-logs/topology-evaluation/$NAME-muscima.txt
 
-.venv/bin/python3 experiment_topology.py evaluate_on_real \
+.venv/bin/python3 experiment_symbols.py evaluate_on_real \
     --model experiment_$NAME \
     > tf-logs/topology-evaluation/$NAME-cavatina.txt
 
-.venv/bin/python3 experiment_topology.py evaluate_on_primus \
+.venv/bin/python3 experiment_symbols.py evaluate_on_primus \
     --model experiment_$NAME \
     > tf-logs/topology-evaluation/$NAME-primus.txt
 

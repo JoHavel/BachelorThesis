@@ -107,6 +107,9 @@ You can start a process on a GPU node like this:
     # Evaluate model experiment_01
     srun -p gpu-ms -n 1 --gpus=1 --mem=8gb --nodelist=dll-10gpu2 --pty .venv/bin/python3 experiment_topology.py evaluate --model experiment_01
 
+    # aggregate experiment results
+    python3 experiment_symbols.py aggregate_evaluation --stdouts tf-logs/topology-evaluation
+
 
 ## Adding custom symbols into the symbol repository
 

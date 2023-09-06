@@ -60,7 +60,7 @@ def evaluate_model(model_name: str, writers_filter: str, pages_filter: str):
             print("\n")
             print("#############################")
             print("# Writer: {:02d}      Page: {:03d} #".format(writer, page))
-            print("#############################")
+            print("#############################", flush=True)
 
             image_path = os.path.join(
                 config.CVC_MUSCIMA_PATH,
@@ -106,7 +106,7 @@ def evaluate_model(model_name: str, writers_filter: str, pages_filter: str):
                 print("PREDICTION: ", prediction)
                 print("REPAIRED:   ", repaired_prediction)
                 print("Warnings:", warnings)
-                print("****")
+                print("****", flush=True)
                 _report_staff_metrics(staff_metrics)
 
                 # save the predicted annotation
@@ -116,14 +116,14 @@ def evaluate_model(model_name: str, writers_filter: str, pages_filter: str):
             # report on the page
             print("")
             print("---------------------------")
-            print("Writer: {:02d}      Page: {:03d}".format(writer, page))
+            print("Writer: {:02d}      Page: {:03d}".format(writer, page), flush=True)
             _report_page_metrics(page_metric_aggregate)
 
     # report on the entire run
     print("\n")
     print("==========================================")
     print("=                Averages                =")
-    print("==========================================")
+    print("==========================================", flush=True)
     _report_dataset_metrics(total_metric_aggregate)
 
 
@@ -140,7 +140,7 @@ def evaluate_on_real(model_name: str):
         print("\n")
         print("##########################")
         print("# File: " + file)
-        print("##########################")
+        print("##########################", flush=True)
 
         image_path = os.path.join(
             os.path.dirname(__file__),
@@ -195,7 +195,7 @@ def evaluate_on_real(model_name: str):
             print("PREDICTION: ", prediction)
             print("REPAIRED:   ", repaired_prediction)
             print("Warnings:", warnings)
-            print("****")
+            print("****", flush=True)
             _report_staff_metrics(staff_metrics)
 
         # report on the file
@@ -209,7 +209,7 @@ def evaluate_on_real(model_name: str):
     print("\n")
     print("==========================================")
     print("=                Averages                =")
-    print("==========================================")
+    print("==========================================", flush=True)
     _report_dataset_metrics(total_metric_aggregate)
 
 
@@ -227,7 +227,7 @@ def evaluate_on_primus(model_name: str, take_last=100):
     primus = load_primus_as_mashcima_annotations()
     primus = primus[-take_last:]  # take the last n incipits
 
-    print("Loading primus images...")
+    print("Loading primus images...", flush=True)
     with tarfile.open(PRIMUS_PATH, "r:gz") as tar:
         for incipit in primus:
             member = tar.getmember(
@@ -279,7 +279,7 @@ def evaluate_on_primus(model_name: str, take_last=100):
         print("PREDICTION: ", prediction)
         print("REPAIRED:   ", repaired_prediction)
         print("Warnings:", warnings)
-        print("****")
+        print("****", flush=True)
         _report_staff_metrics(staff_metrics)
 
         # show the incipit image
@@ -290,7 +290,7 @@ def evaluate_on_primus(model_name: str, take_last=100):
     print("\n")
     print("==========================================")
     print("=                Averages                =")
-    print("==========================================")
+    print("==========================================", flush=True)
     _report_dataset_metrics(total_metric_aggregate)
 
 
@@ -332,7 +332,7 @@ def _report_staff_metrics(metrics):
     print("ITER_TRAINED: {:.4f}".format(m["ITER_TRAINED"]))
     print("ITER_SLURLESS: {:.4f}".format(m["ITER_SLURLESS"]))
     print("ITER_ORNAMENTLESS: {:.4f}".format(m["ITER_ORNAMENTLESS"]))
-    print("ITER_PITCHLESS: {:.4f}".format(m["ITER_PITCHLESS"]))
+    print("ITER_PITCHLESS: {:.4f}".format(m["ITER_PITCHLESS"]), flush=True)
 
 
 def _report_page_metrics(metrics_aggregate):
@@ -359,7 +359,7 @@ def _report_page_metrics(metrics_aggregate):
     print("avg ITER_PITCHLESS: {:.4f}".format(m["ITER_PITCHLESS"] / c))
 
     ser = m["EDIT_COUNT"] / m["GOLD_TOKEN_COUNT"]
-    print("total norm SER: {:.4f}".format(ser))
+    print("total norm SER: {:.4f}".format(ser), flush=True)
 
 
 def _report_dataset_metrics(metrics_aggregate):
@@ -395,7 +395,7 @@ def _report_dataset_metrics(metrics_aggregate):
 
     print("Tokens (generic) by most participation in edits:")
     for gt, p in sorted(edit_participation.items(), key=lambda i: i[1], reverse=True):
-        print(gt, p)
+        print(gt, p, flush=True)
 
 
 def _calculate_staff_metrics(gold: str, prediction: str):
