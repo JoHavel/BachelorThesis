@@ -101,14 +101,17 @@ You can start a process on a GPU node like this:
     # Train topology experiment A_72
     srun -p gpu-ms -n 1 --gpus=1 --mem=8gb --nodelist=dll-10gpu2 --pty .venv/bin/python3 experiment_topology.py train --model experiment_A_72 --symbols datasets/topology/out/for_mashcima/A_72 --seed_offset 0
 
-    # Run all the topology experiment
+    # Run all the topology experiments
     sbatch topology-train.sh
 
     # Evaluate model experiment_01
     srun -p gpu-ms -n 1 --gpus=1 --mem=8gb --nodelist=dll-10gpu2 --pty .venv/bin/python3 experiment_topology.py evaluate --model experiment_01
 
     # aggregate experiment results
-    python3 experiment_symbols.py aggregate_evaluation --stdouts tf-logs/topology-evaluation
+    python3 experiment_symbols.py aggregate_evaluation
+
+    # starting custom subset of latent train jobs
+    sbatch --array=2,5,10 latent-train.sh 72
 
 
 ## Adding custom symbols into the symbol repository

@@ -162,7 +162,7 @@ class ExperimentSymbols(object):
         import numpy as np
 
         parser = argparse.ArgumentParser()
-        parser.add_argument('--stdouts', default="tf-logs/foo")
+        parser.add_argument('--stdouts', default="tf-logs/stdout-eval")
         args = parser.parse_args(sys.argv[2:])
 
         directory = args.stdouts
@@ -185,9 +185,12 @@ class ExperimentSymbols(object):
             print()
 
             SERs = {
+                "L2": [], "L5": [], "L10": [],
+                "L20": [], "L50": [], "L100": [],
+                "L200": [], "L500": [], "L1000": [],
+                
                 "A": [], "B": [], "C": [], "D": [],
                 "E": [], "F": [], "G": [], "H": [],
-                "L_2": [], "L_4": [], "L_10": [], "L_20": []
             }
             for filename in os.listdir(directory):
                 for experiment in SERs.keys():
@@ -210,6 +213,12 @@ class ExperimentSymbols(object):
             print(dataset + ":")
             print(fmt("A"), fmt("B"), fmt("C"), fmt("D"), sep=" | ")
             print(fmt("E"), fmt("F"), fmt("G"), fmt("H"), sep=" | ")
+            print()
+
+            print(dataset + ":")
+            dims = [2, 5, 10, 20, 50, 100, 200, 500, 1000]
+            for d in dims:
+                print(fmt("L" + str(d)))
             print()
 
 
