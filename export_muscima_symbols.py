@@ -84,7 +84,7 @@ export_sprite_group("f-clef", mc.F_CLEFS)
 export_sprite_group("half-note", mc.HALF_NOTES, { "stem_head": "stem_head" })
 export_sprite_group("quarter-note", mc.QUARTER_NOTES, { "stem_head": "stem_head" })
 
-export_sprite_group("eight-note-up", mc.EIGHTH_NOTES, { "stem_head": "stem_head" })
-export_sprite_group("eight-note-down", flip_flags(mc.EIGHTH_NOTES), { "stem_head": "stem_head" })
+export_sprite_group("eighth-note-up", mc.EIGHTH_NOTES, { "stem_head": "stem_head" })
+export_sprite_group("eighth-note-down", flip_flags(mc.EIGHTH_NOTES), { "stem_head": "stem_head" })
 
 print("Done.")
