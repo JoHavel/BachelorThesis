@@ -5,7 +5,7 @@
 #SBATCH --error=tf-logs/slurm/topology-train-%A_%a.err
 #SBATCH -p gpu-ms
 #SBATCH --gpus=1
-#SBATCH --mem=8gb
+#SBATCH --mem=12gb
 #SBATCH --exclude=dll-3gpu[1-5],dll-4gpu[1-4],dll-8gpu[1-6],dll-10gpu1
 
 # I want to run only on: dll-10gpu[2,3]

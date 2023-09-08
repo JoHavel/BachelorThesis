@@ -113,6 +113,10 @@ You can start a process on a GPU node like this:
     # starting custom subset of latent train jobs
     sbatch --array=2,5,10 latent-train.sh 72
 
+    # start with a dependency on another job
+    sbatch --array=2,5,10,20,50 -d afterok:4343148_50 latent-train.sh 72
+    sbatch --array=100,200 -d afterok:4343148_200 latent-train.sh 72
+
 
 ## Adding custom symbols into the symbol repository
 
