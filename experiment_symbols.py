@@ -65,13 +65,32 @@ class ExperimentSymbols(object):
         return training_dataset, validation_dataset
 
     def inspect(self):
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--quiet', action="store_true", help="store files insted of popping a window")
+        parser.add_argument('--symbols', default="datasets/topology", type=str)
+        args = parser.parse_args(sys.argv[2:])
+
+        # set symbols repository
+        import config
+        config.SYNTHETIC_SYMBOLS_PATH = args.symbols
+
+        directory = "tf-logs/visual-check/" + args.symbols.split("/")[-1]
+
         training_dataset, validation_dataset = self._prepare_datasets()
 
         print("\n\nInspecting TRAINING dataset: (20 items)")
-        training_dataset.check_dataset_visually(example_count=20)
+        training_dataset.check_dataset_visually(
+            example_count=20,
+            quiet=args.quiet,
+            directory=directory + "/training"
+        )
 
         print("\n\nInspecting VALIDATION dataset: (20 items)")
-        validation_dataset.check_dataset_visually(example_count=20)
+        validation_dataset.check_dataset_visually(
+            example_count=20,
+            quiet=args.quiet,
+            directory=directory + "/validation"
+        )
 
     def train(self):
         parser = argparse.ArgumentParser()
@@ -185,9 +204,8 @@ class ExperimentSymbols(object):
             print()
 
             SERs = {
-                "L2": [], "L5": [], "L10": [],
-                "L20": [], "L50": [], "L100": [],
-                "L200": [], "L500": [], "L1000": [],
+                "L2": [], "L4": [], "L5": [], "L6": [],
+                "L8": [], "L10": [],
                 
                 "A": [], "B": [], "C": [], "D": [],
                 "E": [], "F": [], "G": [], "H": [],
@@ -216,7 +234,7 @@ class ExperimentSymbols(object):
             print()
 
             print(dataset + ":")
-            dims = [2, 5, 10, 20, 50, 100, 200, 500, 1000]
+            dims = [2, 4, 5, 6, 8, 10]
             for d in dims:
                 print(fmt("L" + str(d)))
             print()
