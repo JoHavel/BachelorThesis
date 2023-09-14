@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -J symSynTopologyEval
-#SBATCH --array=0-23
+#SBATCH --array=0-7
 #SBATCH --output=tf-logs/slurm/topology-eval-%A_%a.out
 #SBATCH --error=tf-logs/slurm/topology-eval-%A_%a.err
 #SBATCH -p gpu-ms
@@ -15,54 +15,46 @@
 # This script trains models for the TOPOLOGY experiment
 # (testing what topology should be used for synthesis)
 
+# you do:
+# sbatch ./topology-eval.sh 30
+
 ID_TO_NAME="
-A_72
-B_72
-C_72
-D_72
-E_72
-F_72
-G_72
-H_72
-A_73
-B_73
-C_73
-D_73
-E_73
-F_73
-G_73
-H_73
-A_74
-B_74
-C_74
-D_74
-E_74
-F_74
-G_74
-H_74
+A
+B
+C
+D
+E
+F
+G
+H
 "
 
-ID=$SLURM_ARRAY_TASK_ID
-NAME=$(echo "$ID_TO_NAME" | head -n $(expr 2 + $ID) | tail -n 1)
+NAME=$(echo "$ID_TO_NAME" | head -n $(expr 2 + $SLURM_ARRAY_TASK_ID) | tail -n 1)
+SEED=$1
+
+if [ -z "$SEED" ]; then
+    echo "Seed argument missing"
+    exit 1
+fi
 
 echo "################################"
-echo "# Topology eval $ID = $NAME"
+echo "# Topology eval ${NAME}_${SEED}"
 echo "################################"
 echo
 
 export LD_LIBRARY_PATH=/opt/cuda/9.0/lib64:/opt/cuda/9.0/cudnn/7.0/lib64
 
 .venv/bin/python3 experiment_symbols.py evaluate \
-    --model experiment_$NAME \
-    > tf-logs/stdout-eval/$NAME-muscima.txt
+    --model experiment_${NAME}_${SEED} \
+    > tf-logs/stdout-eval/${NAME}_${SEED}-muscima.txt
 
 .venv/bin/python3 experiment_symbols.py evaluate_on_real \
-    --model experiment_$NAME \
-    > tf-logs/stdout-eval/$NAME-cavatina.txt
+    --model experiment_${NAME}_${SEED} \
+    > tf-logs/stdout-eval/${NAME}_${SEED}-cavatina.txt
 
 .venv/bin/python3 experiment_symbols.py evaluate_on_primus \
-    --model experiment_$NAME \
-    > tf-logs/stdout-eval/$NAME-primus.txt
+    --model experiment_${NAME}_${SEED} \
+    > tf-logs/stdout-eval/${NAME}_${SEED}-primus.txt
 
 echo
 echo "########"
